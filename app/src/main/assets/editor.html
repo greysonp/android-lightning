@@ -1,0 +1,38 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+        <style>
+            * {
+                -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+                outline: none;
+            }
+
+            html, body {
+                height: 100%;
+                margin: 0;
+                padding: 0;
+                font-family: "Helvetica Neue", "Helvetica", sans-serif;
+                font-weight: 200;
+            }
+
+            #container {
+                width: calc(100% - 40px);
+                height: calc(100% - 40px);
+                padding: 20px 20px 20px 20px;
+                overflow: auto;
+            }
+
+        </style>
+    </head>
+    <body>
+        <div id="container" contentEditable="true">
+        </div>
+
+        <script type="text/javascript">
+            function inputCommand(command) {
+                document.execCommand(command, true, null);
+            }
+        </script>
+    </body>
+</html>

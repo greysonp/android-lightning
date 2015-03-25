@@ -1,0 +1,55 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".EditorActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/btn_bold"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:text="B"/>
+        <Button
+            android:id="@+id/btn_italic"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:text="I"/>
+        <Button
+            android:id="@+id/btn_underline"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:text="U"/>
+        <Button
+            android:id="@+id/btn_ol"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:text="OL"/>
+        <Button
+            android:id="@+id/btn_ul"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:text="UL"/>
+        <Button
+            android:id="@+id/btn_indent"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:text="+"/>
+        <Button
+            android:id="@+id/btn_outdent"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:text="-"/>
+    </LinearLayout>
+
+    <WebView
+        android:id="@+id/webview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</LinearLayout>
