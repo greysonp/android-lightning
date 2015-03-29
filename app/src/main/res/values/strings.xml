@@ -3,5 +3,8 @@
 
     <string name="app_name">Lightning</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_sign_in">SignInActivity</string>
+
+    <string name="hello_world">Hello world!</string>
 
 </resources>

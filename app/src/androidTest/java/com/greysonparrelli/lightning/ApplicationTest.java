@@ -1,4 +1,4 @@
-package com.greysonparrelli.evernote_lightning;
+package com.greysonparrelli.lightning;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

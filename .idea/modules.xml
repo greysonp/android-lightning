@@ -3,8 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/evernote-lightning.iml" filepath="$PROJECT_DIR$/evernote-lightning.iml" />
+      <module fileurl="file://$PROJECT_DIR$/evernote-sdk/evernote-sdk.iml" filepath="$PROJECT_DIR$/evernote-sdk/evernote-sdk.iml" />
+      <module fileurl="file://$PROJECT_DIR$/lightning.iml" filepath="$PROJECT_DIR$/lightning.iml" />
     </modules>
   </component>
 </project>
-
