@@ -3,23 +3,35 @@ package com.greysonparrelli.lightning;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.webkit.WebView;
 
-import com.greysonparrelli.lightning.R;
+import com.greysonparrelli.lightning.cloud.GoogleDrive;
+import com.greysonparrelli.lightning.view.EditorWebView;
 
 
 public class EditorActivity extends ActionBarActivity {
 
-    private WebView mWebView;
+    private EditorWebView mWebView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editor);
 
-        mWebView = (WebView) findViewById(R.id.webview);
-        mWebView.getSettings().setJavaScriptEnabled(true);
-        mWebView.loadUrl("file:///android_asset/editor.html");
+        GoogleDrive.getInstance(this).connect(new GoogleDrive.IOnConnectedListener() {
+            @Override
+            public void onConnected() {
+                GoogleDrive.getInstance(EditorActivity.this).getFileContents(new GoogleDrive.IOnContentsRetrievedListener() {
+                    @Override
+                    public void onContentsRetrieved(String contents) {
+                        init(contents);
+                    }
+                });
+            }
+        });
+    }
+
+    private void init(String contents) {
+        mWebView = (EditorWebView) findViewById(R.id.webview);
 
         linkButtonToCommand(R.id.btn_bold, "bold");
         linkButtonToCommand(R.id.btn_italic, "italic");
@@ -35,7 +47,7 @@ public class EditorActivity extends ActionBarActivity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mWebView.loadUrl("javascript:inputCommand('" + command + "')");
+                mWebView.sendCommand(command);
             }
         });
     }
