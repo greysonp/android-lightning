@@ -32,6 +32,7 @@ public class EditorActivity extends ActionBarActivity {
 
     private void init(String contents) {
         mWebView = (EditorWebView) findViewById(R.id.webview);
+        mWebView.setContent(contents);
 
         linkButtonToCommand(R.id.btn_bold, EditorWebView.Command.BOLD);
         linkButtonToCommand(R.id.btn_italic, EditorWebView.Command.ITALIC);
@@ -48,6 +49,12 @@ public class EditorActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 mWebView.sendCommand(command);
+                mWebView.getContent(new EditorWebView.IOnContentRetrievedListener() {
+                    @Override
+                    public void onContentRetrieved(String content) {
+                        GoogleDrive.getInstance(EditorActivity.this).saveFileContents(content, null);
+                    }
+                });
             }
         });
     }

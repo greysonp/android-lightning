@@ -33,6 +33,14 @@
             function inputCommand(command) {
                 document.execCommand(command, true, null);
             }
+
+            function setContent(content) {
+                document.getElementById('container').innerHTML = content;
+            }
+
+            function getContent() {
+                Android.sendContent(document.getElementById('container').innerHTML);
+            }
         </script>
     </body>
 </html>

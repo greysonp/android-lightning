@@ -3,12 +3,16 @@ package com.greysonparrelli.lightning.view;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.AttributeSet;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 
 /**
  * @author greysonp
  */
 public class EditorWebView extends WebView {
+
+    private IOnContentRetrievedListener mOnContentRetrievedListener;
+
     public EditorWebView(Context context) {
         super(context);
         init();
@@ -23,10 +27,34 @@ public class EditorWebView extends WebView {
         loadUrl("javascript:inputCommand('" + command.getCommand() + "')");
     }
 
-    @SuppressLint("SetJavaScriptEnabled")
+    public void setContent(String content) {
+        loadUrl("javascript:setContent('" + content + "')");
+    }
+
+    public void getContent(IOnContentRetrievedListener listener) {
+        mOnContentRetrievedListener = listener;
+        loadUrl("javascript:getContent()");
+    }
+
+    @SuppressLint({"SetJavaScriptEnabled", "AddJavascriptInterface"})
     private void init() {
         getSettings().setJavaScriptEnabled(true);
+        addJavascriptInterface(new EditorJavascriptInterface(), "Android");
         loadUrl("file:///android_asset/editor.html");
+    }
+
+    public class EditorJavascriptInterface {
+
+        @JavascriptInterface
+        public void sendContent(String content) {
+            if (mOnContentRetrievedListener != null) {
+                mOnContentRetrievedListener.onContentRetrieved(content);
+            }
+        }
+    }
+
+    public interface IOnContentRetrievedListener {
+        void onContentRetrieved(String content);
     }
 
     public enum Command {
