@@ -1,6 +1,7 @@
 package com.greysonparrelli.lightning.cloud;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -209,7 +210,7 @@ public class GoogleDrive implements GoogleApiClient.ConnectionCallbacks, GoogleA
                 DriveFile file = params[0];
                 try {
                     DriveApi.DriveContentsResult driveContentsResult = file.open(
-                            getGoogleApiClient(), DriveFile.MODE_WRITE_ONLY, null).await();
+                            getGoogleApiClient(), DriveFile.MODE_WRITE_ONLY, new DownloadListener()).await();
                     if (!driveContentsResult.getStatus().isSuccess()) {
                         return false;
                     }
@@ -270,7 +271,7 @@ public class GoogleDrive implements GoogleApiClient.ConnectionCallbacks, GoogleA
                 DriveFile file = params[0];
                 try {
                     DriveApi.DriveContentsResult driveContentsResult = file.open(
-                            getGoogleApiClient(), DriveFile.MODE_READ_ONLY, null).await();
+                            getGoogleApiClient(), DriveFile.MODE_READ_ONLY, new DownloadListener()).await();
                     if (!driveContentsResult.getStatus().isSuccess()) {
                         return null;
                     }
@@ -322,5 +323,31 @@ public class GoogleDrive implements GoogleApiClient.ConnectionCallbacks, GoogleA
 
     private interface IOnFileFoundListener {
         void onFileFound(@Nullable DriveId id);
+    }
+
+    private class DownloadListener implements DriveFile.DownloadProgressListener {
+
+        private ProgressDialog mProgressDialog;
+
+        @Override
+        public void onProgress(long bytesDownloaded, long bytesExpected) {
+            // bytesExpected will be negative if there's nothing to download
+            if (bytesExpected <= 0) {
+                return;
+            }
+
+            if (mProgressDialog == null) {
+                mProgressDialog = new ProgressDialog(mActivity, ProgressDialog.STYLE_HORIZONTAL);
+                mProgressDialog.show();
+            }
+            int percent = (int) Math.round((bytesDownloaded * 1.0) / (bytesExpected * 1.0) * 100);
+            Log.d("REMOVE", "downloaded: " + bytesDownloaded + " | expected: " + bytesExpected + " | percent: " + percent);
+
+            mProgressDialog.setProgress(percent);
+
+            if (percent >= 100) {
+                mProgressDialog.dismiss();
+            }
+        }
     }
 }
