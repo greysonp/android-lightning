@@ -19,13 +19,33 @@ public class EditorWebView extends WebView {
         init();
     }
 
-    public void sendCommand(String command) {
-        loadUrl("javascript:inputCommand('" + command + "')");
+    public void sendCommand(Command command) {
+        loadUrl("javascript:inputCommand('" + command.getCommand() + "')");
     }
 
     @SuppressLint("SetJavaScriptEnabled")
     private void init() {
         getSettings().setJavaScriptEnabled(true);
         loadUrl("file:///android_asset/editor.html");
+    }
+
+    public enum Command {
+        BOLD("bold"),
+        ITALIC("italic"),
+        UNDERLINE("underline"),
+        ORDERED_LIST("insertOrderedList"),
+        UNORDERED_LIST("insertUnorderedList"),
+        INDENT("indent"),
+        OUTDENT("outdent");
+
+        private String mCommand;
+
+        Command(String command) {
+            mCommand = command;
+        }
+
+        public String getCommand() {
+            return mCommand;
+        }
     }
 }

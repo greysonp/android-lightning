@@ -33,16 +33,16 @@ public class EditorActivity extends ActionBarActivity {
     private void init(String contents) {
         mWebView = (EditorWebView) findViewById(R.id.webview);
 
-        linkButtonToCommand(R.id.btn_bold, "bold");
-        linkButtonToCommand(R.id.btn_italic, "italic");
-        linkButtonToCommand(R.id.btn_underline, "underline");
-        linkButtonToCommand(R.id.btn_ol, "insertOrderedList");
-        linkButtonToCommand(R.id.btn_ul, "insertUnorderedList");
-        linkButtonToCommand(R.id.btn_indent, "indent");
-        linkButtonToCommand(R.id.btn_outdent, "outdent");
+        linkButtonToCommand(R.id.btn_bold, EditorWebView.Command.BOLD);
+        linkButtonToCommand(R.id.btn_italic, EditorWebView.Command.ITALIC);
+        linkButtonToCommand(R.id.btn_underline, EditorWebView.Command.UNDERLINE);
+        linkButtonToCommand(R.id.btn_ol, EditorWebView.Command.ORDERED_LIST);
+        linkButtonToCommand(R.id.btn_ul, EditorWebView.Command.UNORDERED_LIST);
+        linkButtonToCommand(R.id.btn_indent, EditorWebView.Command.INDENT);
+        linkButtonToCommand(R.id.btn_outdent, EditorWebView.Command.OUTDENT);
     }
 
-    private void linkButtonToCommand(int btnId, final String command) {
+    private void linkButtonToCommand(int btnId, final EditorWebView.Command command) {
         View btn = findViewById(btnId);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
