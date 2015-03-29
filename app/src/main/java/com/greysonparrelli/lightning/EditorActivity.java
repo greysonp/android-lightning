@@ -2,6 +2,7 @@ package com.greysonparrelli.lightning;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import com.greysonparrelli.lightning.cloud.GoogleDrive;
@@ -15,7 +16,9 @@ public class EditorActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d("REMOVE", "onCreate");
         setContentView(R.layout.activity_editor);
+        initLayout();
 
         GoogleDrive.getInstance(this).connect(new GoogleDrive.IOnConnectedListener() {
             @Override
@@ -23,16 +26,20 @@ public class EditorActivity extends ActionBarActivity {
                 GoogleDrive.getInstance(EditorActivity.this).getFileContents(new GoogleDrive.IOnContentsRetrievedListener() {
                     @Override
                     public void onContentsRetrieved(String contents) {
-                        init(contents);
+                        initEditorWithContents(contents);
                     }
                 });
             }
         });
     }
 
-    private void init(String contents) {
+    private void initLayout() {
         mWebView = (EditorWebView) findViewById(R.id.webview);
+    }
+
+    private void initEditorWithContents(String contents) {
         mWebView.setContent(contents);
+        mWebView.setOnEditorEventListener(new EditorEventListener());
 
         linkButtonToCommand(R.id.btn_bold, EditorWebView.Command.BOLD);
         linkButtonToCommand(R.id.btn_italic, EditorWebView.Command.ITALIC);
@@ -49,13 +56,26 @@ public class EditorActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 mWebView.sendCommand(command);
-                mWebView.getContent(new EditorWebView.IOnContentRetrievedListener() {
-                    @Override
-                    public void onContentRetrieved(String content) {
-                        GoogleDrive.getInstance(EditorActivity.this).saveFileContents(content, null);
-                    }
-                });
             }
         });
+    }
+
+    private class EditorEventListener implements EditorWebView.IOnEditorEventListener {
+
+        @Override
+        public void onContentShouldBeSaved(String content) {
+            Log.d("REMOVE", "SAVING CONTENT");
+            GoogleDrive.getInstance(EditorActivity.this).saveFileContents(content, new GoogleDrive.IOnFileSavedListener() {
+                @Override
+                public void onFileSaved(boolean success) {
+                    Log.d("REMOVE", "FILE SAVED: " + success);
+                }
+            });
+        }
+
+        @Override
+        public void onNotSynced() {
+            Log.d("REMOVE", "NOT SYNCED");
+        }
     }
 }

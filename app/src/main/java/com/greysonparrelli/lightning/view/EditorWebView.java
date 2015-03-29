@@ -12,6 +12,7 @@ import android.webkit.WebView;
 public class EditorWebView extends WebView {
 
     private IOnContentRetrievedListener mOnContentRetrievedListener;
+    private IOnEditorEventListener mOnEditorEventListener;
 
     public EditorWebView(Context context) {
         super(context);
@@ -36,6 +37,10 @@ public class EditorWebView extends WebView {
         loadUrl("javascript:getContent()");
     }
 
+    public void setOnEditorEventListener(IOnEditorEventListener listener) {
+        mOnEditorEventListener = listener;
+    }
+
     @SuppressLint({"SetJavaScriptEnabled", "AddJavascriptInterface"})
     private void init() {
         getSettings().setJavaScriptEnabled(true);
@@ -51,10 +56,29 @@ public class EditorWebView extends WebView {
                 mOnContentRetrievedListener.onContentRetrieved(content);
             }
         }
+
+        @JavascriptInterface
+        public void saveContent(String content) {
+            if (mOnEditorEventListener != null) {
+                mOnEditorEventListener.onContentShouldBeSaved(content);
+            }
+        }
+
+        @JavascriptInterface
+        public void setNotSynced() {
+            if (mOnEditorEventListener != null) {
+                mOnEditorEventListener.onNotSynced();
+            }
+        }
     }
 
     public interface IOnContentRetrievedListener {
         void onContentRetrieved(String content);
+    }
+
+    public interface IOnEditorEventListener {
+        void onContentShouldBeSaved(String content);
+        void onNotSynced();
     }
 
     public enum Command {

@@ -30,16 +30,62 @@
         </div>
 
         <script type="text/javascript">
+            // ===================================================
+            // Initialization
+            // ===================================================
+            var PAUSE_DURATION = 1000;
+            var _pauseTimerId;
+            var _notifiedNotSynced = false;
+
+            document.getElementById('container').addEventListener('input', onEditorContentChanged);
+
+
+            // ===================================================
+            // Event Listeners
+            // ===================================================
+
+            function onEditorContentChanged() {
+                // Stop the pause timer
+                clearTimeout(_pauseTimerId);
+
+                // If we haven't notified Android that we're not synced yet, do so
+                if (!_notifiedNotSynced) {
+                    _notifiedNotSynced = true;
+                    Android.setNotSynced();
+                }
+
+                // Set a timer to tell Android to save the content to cloud storage if the user has not edited the
+                // content for some period of time
+                _pauseTimerId = setTimeout(function() {
+                    _notifiedNotSynced = false;
+                    Android.saveContent(getEditor().innerHTML);
+                }, PAUSE_DURATION);
+            }
+
+
+            // ===================================================
+            // Private
+            // ===================================================
+
+            function getEditor() {
+                return document.getElementById('container');
+            }
+
+
+            // ===================================================
+            // Android Interaction
+            // ===================================================
+
             function inputCommand(command) {
                 document.execCommand(command, true, null);
             }
 
             function setContent(content) {
-                document.getElementById('container').innerHTML = content;
+                getEditor().innerHTML = content;
             }
 
             function getContent() {
-                Android.sendContent(document.getElementById('container').innerHTML);
+                Android.sendContent(getEditor().innerHTML);
             }
         </script>
     </body>
