@@ -11,12 +11,13 @@ import com.greysonparrelli.lightning.view.EditorWebView;
 
 public class EditorActivity extends ActionBarActivity {
 
+    private static final String TAG = "EditorActivity";
+
     private EditorWebView mWebView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("REMOVE", "onCreate");
         setContentView(R.layout.activity_editor);
         initLayout();
 
@@ -64,18 +65,21 @@ public class EditorActivity extends ActionBarActivity {
 
         @Override
         public void onContentShouldBeSaved(String content) {
-            Log.d("REMOVE", "SAVING CONTENT");
+            Log.d(TAG, "Saving content...");
             GoogleDrive.getInstance(EditorActivity.this).saveFileContents(content, new GoogleDrive.IOnFileSavedListener() {
                 @Override
                 public void onFileSaved(boolean success) {
-                    Log.d("REMOVE", "FILE SAVED: " + success);
+                    if (success) {
+                        Log.d(TAG, "Content saved.");
+                    } else {
+                        Log.w(TAG, "Content failed to save.");
+                    }
                 }
             });
         }
 
         @Override
         public void onNotSynced() {
-            Log.d("REMOVE", "NOT SYNCED");
         }
     }
 }
