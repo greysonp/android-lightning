@@ -9,39 +9,48 @@
     <LinearLayout
         android:id="@+id/toolbar_bottom"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:orientation="horizontal"
         android:layout_alignParentBottom="true">
 
-        <Button
+        <ImageButton
             android:id="@+id/btn_outdent"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="Outdent" />
+            android:padding="7dp"
+            android:paddingBottom="7dp"
+            android:src="@drawable/ic_command_outdent"
+            android:scaleType="centerInside"/>
+
         <Button
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="Line Break" />
-        <Button
+
+        <ImageButton
             android:id="@+id/btn_indent"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="Indent" />
+            android:paddingTop="7dp"
+            android:paddingBottom="7dp"
+            android:src="@drawable/ic_command_indent"
+            android:scaleType="centerInside"/>
     </LinearLayout>
 
     <!--Side Tray-->
     <ListView
         android:id="@+id/toolbar_side"
-        android:layout_width="50dp"
+        android:layout_width="40dp"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:layout_above="@+id/toolbar_bottom"
         android:stackFromBottom="true"
-        android:transcriptMode="alwaysScroll"/>
+        android:transcriptMode="alwaysScroll"
+        android:divider="@null"/>
 
 
     <com.greysonparrelli.lightning.view.EditorWebView

@@ -5,7 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.greysonparrelli.lightning.R;
@@ -34,8 +34,8 @@ public class ToolbarAdapter extends ArrayAdapter<ToolbarCommand> {
 
         // Apply our model data to the view
         final ToolbarCommand toolbarCommand = getItem(position);
-        TextView button = (TextView) convertView.findViewById(R.id.btn);
-        button.setText(toolbarCommand.getTitle());
+        ImageView button = (ImageView) convertView.findViewById(R.id.btn);
+        button.setImageResource(toolbarCommand.getIconResource());
 
         // Link the command to trigger the appropriate action on the webview
         button.setOnClickListener(new View.OnClickListener() {
@@ -49,10 +49,10 @@ public class ToolbarAdapter extends ArrayAdapter<ToolbarCommand> {
     }
 
     private void initCommands() {
-        add(new ToolbarCommand("U", EditorWebView.Command.UNDERLINE));
-        add(new ToolbarCommand("I", EditorWebView.Command.ITALIC));
-        add(new ToolbarCommand("B", EditorWebView.Command.BOLD));
-        add(new ToolbarCommand("OL", EditorWebView.Command.ORDERED_LIST));
-        add(new ToolbarCommand("UL", EditorWebView.Command.UNORDERED_LIST));
+        add(new ToolbarCommand(R.drawable.ic_command_underline, EditorWebView.Command.UNDERLINE));
+        add(new ToolbarCommand(R.drawable.ic_command_italic, EditorWebView.Command.ITALIC));
+        add(new ToolbarCommand(R.drawable.ic_command_bold, EditorWebView.Command.BOLD));
+        add(new ToolbarCommand(R.drawable.ic_command_ordered_list, EditorWebView.Command.ORDERED_LIST));
+        add(new ToolbarCommand(R.drawable.ic_command_unordered_list, EditorWebView.Command.UNORDERED_LIST));
     }
 }

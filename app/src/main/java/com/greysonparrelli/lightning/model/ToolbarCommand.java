@@ -7,16 +7,16 @@ import com.greysonparrelli.lightning.view.EditorWebView;
  */
 public class ToolbarCommand {
 
-    private final String mTitle;
+    private final int mIcon;
     private final EditorWebView.Command mCommand;
 
-    public ToolbarCommand(String title, EditorWebView.Command command) {
-        mTitle = title;
+    public ToolbarCommand(int iconResource, EditorWebView.Command command) {
+        mIcon = iconResource;
         mCommand = command;
     }
 
-    public String getTitle() {
-        return mTitle;
+    public int getIconResource() {
+        return mIcon;
     }
 
     public EditorWebView.Command getCommand() {
