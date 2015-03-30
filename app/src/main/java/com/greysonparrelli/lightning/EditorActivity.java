@@ -1,19 +1,22 @@
 package com.greysonparrelli.lightning;
 
-import android.support.v7.app.ActionBarActivity;
+import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ListView;
 
+import com.greysonparrelli.lightning.adapter.ToolbarAdapter;
 import com.greysonparrelli.lightning.cloud.GoogleDrive;
 import com.greysonparrelli.lightning.view.EditorWebView;
 
 
-public class EditorActivity extends ActionBarActivity {
+public class EditorActivity extends Activity {
 
     private static final String TAG = "EditorActivity";
 
     private EditorWebView mWebView;
+    private ListView mToolbarSide;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,17 +39,16 @@ public class EditorActivity extends ActionBarActivity {
 
     private void initLayout() {
         mWebView = (EditorWebView) findViewById(R.id.webview);
+
+        mToolbarSide = (ListView) findViewById(R.id.toolbar_side);
+        mToolbarSide.setAdapter(new ToolbarAdapter(this, mWebView));
+
     }
 
     private void initEditorWithContents(String contents) {
         mWebView.setContent(contents);
         mWebView.setOnEditorEventListener(new EditorEventListener());
 
-        linkButtonToCommand(R.id.btn_bold, EditorWebView.Command.BOLD);
-        linkButtonToCommand(R.id.btn_italic, EditorWebView.Command.ITALIC);
-        linkButtonToCommand(R.id.btn_underline, EditorWebView.Command.UNDERLINE);
-        linkButtonToCommand(R.id.btn_ol, EditorWebView.Command.ORDERED_LIST);
-        linkButtonToCommand(R.id.btn_ul, EditorWebView.Command.UNORDERED_LIST);
         linkButtonToCommand(R.id.btn_indent, EditorWebView.Command.INDENT);
         linkButtonToCommand(R.id.btn_outdent, EditorWebView.Command.OUTDENT);
     }

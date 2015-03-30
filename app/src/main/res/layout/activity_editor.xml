@@ -1,55 +1,56 @@
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".EditorActivity">
 
+    <!--Bottom Tray-->
     <LinearLayout
+        android:id="@+id/toolbar_bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <Button
-            android:id="@+id/btn_bold"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:text="B"/>
-        <Button
-            android:id="@+id/btn_italic"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:text="I"/>
-        <Button
-            android:id="@+id/btn_underline"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:text="U"/>
-        <Button
-            android:id="@+id/btn_ol"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:text="OL"/>
-        <Button
-            android:id="@+id/btn_ul"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:text="UL"/>
-        <Button
-            android:id="@+id/btn_indent"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:text="+"/>
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true">
+
         <Button
             android:id="@+id/btn_outdent"
-            android:layout_width="50dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="-"/>
+            android:layout_weight="1"
+            android:text="Outdent" />
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Line Break" />
+        <Button
+            android:id="@+id/btn_indent"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Indent" />
     </LinearLayout>
+
+    <!--Side Tray-->
+    <ListView
+        android:id="@+id/toolbar_side"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_above="@+id/toolbar_bottom"
+        android:stackFromBottom="true"
+        android:transcriptMode="alwaysScroll"/>
+
 
     <com.greysonparrelli.lightning.view.EditorWebView
         android:id="@+id/webview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_above="@id/toolbar_bottom"
+        android:layout_toLeftOf="@id/toolbar_side"/>
 
-</LinearLayout>
+</RelativeLayout>
