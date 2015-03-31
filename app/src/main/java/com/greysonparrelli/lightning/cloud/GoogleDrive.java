@@ -2,10 +2,8 @@ package com.greysonparrelli.lightning.cloud;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -36,11 +34,10 @@ import java.util.Iterator;
 /**
  * @author greyson
  */
-public class GoogleDrive implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class GoogleDrive implements IStorageProvider, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     private static final String TAG = "GoogleDrive";
     private static final int RESOLVE_CONNECTION_REQUEST_CODE = 24601;
     private static final String FILE_NAME = "lightning.html";
-    private static final String KEY_FILE_ID = "file_id";
 
     private static GoogleDrive sInstance;
 
@@ -78,6 +75,54 @@ public class GoogleDrive implements GoogleApiClient.ConnectionCallbacks, GoogleA
         }
     }
 
+    @Override
+    public void connect(IOnConnectedListener onConnectedListener) {
+        mOnConnectedListener = onConnectedListener;
+        if (mClient.isConnected() && mOnConnectedListener != null) {
+            mOnConnectedListener.onConnected();
+        } else {
+            mClient.connect();
+        }
+    }
+
+    @Override
+    public void saveFileContents(final String contents, final IOnFileSavedListener onFileSavedListener) {
+        findOrCreateNewFile(new IOnFileCreatedListener() {
+            @Override
+            public void onFileCreated(DriveFile file) {
+                if (file != null) {
+                    updateFileContents(file, contents, onFileSavedListener);
+                } else {
+                    onFileSavedListener.onFileSaved(false);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void getFileContents(final IOnContentsRetrievedListener onContentRetrievedListener) {
+        findOrCreateNewFile(new IOnFileCreatedListener() {
+            @Override
+            public void onFileCreated(DriveFile file) {
+                if (file != null) {
+                    readFileContents(file, onContentRetrievedListener);
+                } else {
+                    onContentRetrievedListener.onContentsRetrieved("");
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        switch (requestCode) {
+            case RESOLVE_CONNECTION_REQUEST_CODE:
+                if (resultCode == Activity.RESULT_OK) {
+                    mClient.connect();
+                }
+                break;
+        }
+    }
 
     // =============================================
     // Public
@@ -93,51 +138,6 @@ public class GoogleDrive implements GoogleApiClient.ConnectionCallbacks, GoogleA
         }
 
         return sInstance;
-    }
-
-    public void connect(IOnConnectedListener onConnectedListener) {
-        mOnConnectedListener = onConnectedListener;
-        if (mClient.isConnected() && mOnConnectedListener != null) {
-            mOnConnectedListener.onConnected();
-        } else {
-            mClient.connect();
-        }
-    }
-
-    public void saveFileContents(final String contents, final IOnFileSavedListener onFileSavedListener) {
-        findOrCreateNewFile(new IOnFileCreatedListener() {
-            @Override
-            public void onFileCreated(DriveFile file) {
-                if (file != null) {
-                    updateFileContents(file, contents, onFileSavedListener);
-                } else {
-                    onFileSavedListener.onFileSaved(false);
-                }
-            }
-        });
-    }
-
-    public void getFileContents(final IOnContentsRetrievedListener onContentRetrievedListener) {
-        findOrCreateNewFile(new IOnFileCreatedListener() {
-            @Override
-            public void onFileCreated(DriveFile file) {
-                if (file != null) {
-                    readFileContents(file, onContentRetrievedListener);
-                } else {
-                    onContentRetrievedListener.onContentsRetrieved("");
-                }
-            }
-        });
-    }
-
-    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-        switch (requestCode) {
-            case RESOLVE_CONNECTION_REQUEST_CODE:
-                if (resultCode == Activity.RESULT_OK) {
-                    mClient.connect();
-                }
-                break;
-        }
     }
 
 
@@ -304,18 +304,6 @@ public class GoogleDrive implements GoogleApiClient.ConnectionCallbacks, GoogleA
     // =============================================
     // Classes
     // =============================================
-
-    public interface IOnConnectedListener {
-        void onConnected();
-    }
-
-    public interface IOnContentsRetrievedListener {
-        void onContentsRetrieved(String contents);
-    }
-
-    public interface IOnFileSavedListener {
-        void onFileSaved(boolean success);
-    }
 
     private interface IOnFileCreatedListener {
         void onFileCreated(@Nullable DriveFile file);
