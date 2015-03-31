@@ -1,4 +1,4 @@
-package com.greysonparrelli.lightning.cloud;
+package com.greysonparrelli.lightning.storage;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;

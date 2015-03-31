@@ -1,4 +1,4 @@
-package com.greysonparrelli.lightning.cloud;
+package com.greysonparrelli.lightning.storage;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -32,7 +32,7 @@ import java.io.OutputStream;
 import java.util.Iterator;
 
 /**
- * @author greyson
+ * @author greysonp
  */
 public class GoogleDrive implements IStorageProvider, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     private static final String TAG = "GoogleDrive";

@@ -7,7 +7,8 @@ import android.view.View;
 import android.widget.ListView;
 
 import com.greysonparrelli.lightning.adapter.ToolbarAdapter;
-import com.greysonparrelli.lightning.cloud.GoogleDrive;
+import com.greysonparrelli.lightning.storage.IStorageProvider;
+import com.greysonparrelli.lightning.storage.LocalStorage;
 import com.greysonparrelli.lightning.view.EditorWebView;
 
 
@@ -17,6 +18,7 @@ public class EditorActivity extends Activity {
 
     private EditorWebView mWebView;
     private ListView mToolbarSide;
+    private IStorageProvider mStorageProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,12 +26,16 @@ public class EditorActivity extends Activity {
         setContentView(R.layout.activity_editor);
         initLayout();
 
-        GoogleDrive.getInstance(this).connect(new GoogleDrive.IOnConnectedListener() {
+        mStorageProvider = LocalStorage.getInstance(getApplicationContext());
+
+        mStorageProvider.connect(new IStorageProvider.IOnConnectedListener() {
             @Override
             public void onConnected() {
-                GoogleDrive.getInstance(EditorActivity.this).getFileContents(new GoogleDrive.IOnContentsRetrievedListener() {
+                Log.d(TAG, "Loading content...");
+                mStorageProvider.getFileContents(new IStorageProvider.IOnContentsRetrievedListener() {
                     @Override
                     public void onContentsRetrieved(String contents) {
+                        Log.d(TAG, "Content retrieved.");
                         initEditorWithContents(contents);
                     }
                 });
@@ -68,7 +74,7 @@ public class EditorActivity extends Activity {
         @Override
         public void onContentShouldBeSaved(String content) {
             Log.d(TAG, "Saving content...");
-            GoogleDrive.getInstance(EditorActivity.this).saveFileContents(content, new GoogleDrive.IOnFileSavedListener() {
+            mStorageProvider.saveFileContents(content, new IStorageProvider.IOnFileSavedListener() {
                 @Override
                 public void onFileSaved(boolean success) {
                     if (success) {
