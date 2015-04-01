@@ -25,26 +25,11 @@ public class EditorActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editor);
         initLayout();
-
-        mStorageProvider = LocalStorage.getInstance(getApplicationContext());
-
-        mStorageProvider.connect(new IStorageProvider.IOnConnectedListener() {
-            @Override
-            public void onConnected() {
-                Log.d(TAG, "Loading content...");
-                mStorageProvider.getFileContents(new IStorageProvider.IOnContentsRetrievedListener() {
-                    @Override
-                    public void onContentsRetrieved(String contents) {
-                        Log.d(TAG, "Content retrieved.");
-                        initEditorWithContents(contents);
-                    }
-                });
-            }
-        });
     }
 
     private void initLayout() {
         mWebView = (EditorWebView) findViewById(R.id.webview);
+        mWebView.setOnEditorEventListener(new EditorEventListener());
 
         mToolbarSide = (ListView) findViewById(R.id.toolbar_side);
         mToolbarSide.setAdapter(new ToolbarAdapter(this, mWebView));
@@ -53,7 +38,6 @@ public class EditorActivity extends Activity {
 
     private void initEditorWithContents(String contents) {
         mWebView.setContent(contents);
-        mWebView.setOnEditorEventListener(new EditorEventListener());
 
         linkButtonToCommand(R.id.btn_indent, EditorWebView.Command.INDENT);
         linkButtonToCommand(R.id.btn_outdent, EditorWebView.Command.OUTDENT);
@@ -72,8 +56,29 @@ public class EditorActivity extends Activity {
     private class EditorEventListener implements EditorWebView.IOnEditorEventListener {
 
         @Override
+        public void onReady() {
+            Log.d(TAG, "Editor is ready.");
+
+            // Connect to our storage provider and load the saved data into the editor
+            mStorageProvider = LocalStorage.getInstance(getApplicationContext());
+            mStorageProvider.connect(new IStorageProvider.IOnConnectedListener() {
+                @Override
+                public void onConnected() {
+                    Log.d(TAG, "Loading content...");
+                    mStorageProvider.getFileContents(new IStorageProvider.IOnContentsRetrievedListener() {
+                        @Override
+                        public void onContentRetrieved(String content) {
+                            Log.d(TAG, "Content retrieved. (content length: " + content.length() + ")");
+                            initEditorWithContents(content);
+                        }
+                    });
+                }
+            });
+        }
+
+        @Override
         public void onContentShouldBeSaved(String content) {
-            Log.d(TAG, "Saving content...");
+            Log.d(TAG, "Saving content... (content length: " + content.length() + ")");
             mStorageProvider.saveFileContents(content, new IStorageProvider.IOnFileSavedListener() {
                 @Override
                 public void onFileSaved(boolean success) {

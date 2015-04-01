@@ -20,7 +20,7 @@ public interface IStorageProvider {
     }
 
     interface IOnContentsRetrievedListener {
-        void onContentsRetrieved(String contents);
+        void onContentRetrieved(String contents);
     }
 
     interface IOnFileSavedListener {

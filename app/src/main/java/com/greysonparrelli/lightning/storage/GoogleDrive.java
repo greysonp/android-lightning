@@ -107,7 +107,7 @@ public class GoogleDrive implements IStorageProvider, GoogleApiClient.Connection
                 if (file != null) {
                     readFileContents(file, onContentRetrievedListener);
                 } else {
-                    onContentRetrievedListener.onContentsRetrieved("");
+                    onContentRetrievedListener.onContentRetrieved("");
                 }
             }
         });
@@ -293,7 +293,7 @@ public class GoogleDrive implements IStorageProvider, GoogleApiClient.Connection
             @Override
             protected void onPostExecute(String contents) {
                 if (onContentsReadListener != null) {
-                    onContentsReadListener.onContentsRetrieved(contents);
+                    onContentsReadListener.onContentRetrieved(contents);
                 }
 
             }

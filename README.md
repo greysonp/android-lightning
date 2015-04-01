@@ -8,8 +8,8 @@ This app requires that you have API keys with the cloud storage providers we use
 you'll need to get your own keys. The app expects the following string resources to be available:
 
 ```
-R.string.evernote_consumer_key
-R.string.evernote_consumer_secret
+R.string.dropbox_app_key
+R.string.dropbox_app_secret
 ```
 
 It should be pretty clear what they are. The file ```app/src/main/res/values/api_keys.xml``` is already added to the

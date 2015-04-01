@@ -1,13 +1,11 @@
 package com.greysonparrelli.lightning.storage;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -102,7 +100,7 @@ public class LocalStorage implements IStorageProvider {
             @Override
             protected void onPostExecute(String content) {
                 if (onContentRetrievedListener != null) {
-                    onContentRetrievedListener.onContentsRetrieved(content);
+                    onContentRetrievedListener.onContentRetrieved(content);
                 }
             }
         }.execute();

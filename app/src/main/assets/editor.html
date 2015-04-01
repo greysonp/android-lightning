@@ -38,6 +38,10 @@
             var _notifiedNotSynced = false;
 
             document.getElementById('container').addEventListener('input', onEditorContentChanged);
+            window.onload = function() {
+                console.log("onload");
+                Android.onReady();
+            }
 
 
             // ===================================================

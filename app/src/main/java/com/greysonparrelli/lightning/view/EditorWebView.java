@@ -13,6 +13,7 @@ public class EditorWebView extends WebView {
 
     private IOnContentRetrievedListener mOnContentRetrievedListener;
     private IOnEditorEventListener mOnEditorEventListener;
+    private boolean mLoadedWithoutListener;
 
     public EditorWebView(Context context) {
         super(context);
@@ -39,10 +40,15 @@ public class EditorWebView extends WebView {
 
     public void setOnEditorEventListener(IOnEditorEventListener listener) {
         mOnEditorEventListener = listener;
+        if (mLoadedWithoutListener) {
+            mOnEditorEventListener.onReady();
+            mLoadedWithoutListener = false;
+        }
     }
 
     @SuppressLint({"SetJavaScriptEnabled", "AddJavascriptInterface"})
     private void init() {
+        WebView.setWebContentsDebuggingEnabled(true);
         getSettings().setJavaScriptEnabled(true);
         addJavascriptInterface(new EditorJavascriptInterface(), "Android");
         loadUrl("file:///android_asset/editor.html");
@@ -70,6 +76,15 @@ public class EditorWebView extends WebView {
                 mOnEditorEventListener.onNotSynced();
             }
         }
+
+        @JavascriptInterface
+        public void onReady() {
+            if (mOnEditorEventListener != null) {
+                mOnEditorEventListener.onReady();
+            } else {
+                mLoadedWithoutListener = true;
+            }
+        }
     }
 
     public interface IOnContentRetrievedListener {
@@ -77,6 +92,7 @@ public class EditorWebView extends WebView {
     }
 
     public interface IOnEditorEventListener {
+        void onReady();
         void onContentShouldBeSaved(String content);
         void onNotSynced();
     }
